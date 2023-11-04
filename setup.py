@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
   name='stemmer-madura',
-  version='0.1.0',
+  version='0.1.1',
   description='Stemmer untuk bahasa Madura menggunakan rule based',
   author='Mohammad Nazir Arifin',
   author_email='ceylon.rizan@gmail.com',

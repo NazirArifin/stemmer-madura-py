@@ -11,3 +11,6 @@ dist/
 # Ignore virtual environment directories
 venv/
 env/
+
+# Ignore egg metadata
+*.egg-info/
