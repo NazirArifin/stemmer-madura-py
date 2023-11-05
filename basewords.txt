@@ -915,12 +915,12 @@ abai
 abheukta
 abeuleu
 abeun
-abakta
-abala
+bakta
+bala
 aban
 abeukna
 aba'na
-abang,
+abang
 abang
 abeung
 tretan
@@ -1232,8 +1232,6 @@ rapor
 rengke
 rasa
 rasah
-aromasa
-aromasah
 rassana
 qori
 qorik
@@ -3098,7 +3096,7 @@ tebbhak
 tapser
 tebbhasan
 tekka
-katorodhan
+torod
 padhu
 toma
 koto
@@ -4408,3 +4406,6 @@ kasambhu
 meddem
 lerek
 kanak
+masa
+balanjha
+balanja

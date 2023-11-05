@@ -32,6 +32,17 @@ rules = [
     True
   ),
 
+  # Han Suffix Removal
+  # Beberapa kata dengan akhiran konsonan + han (katorodhan, kawajibhan)
+  Rule(
+    'Han Suffix Removal',
+    re.compile('^(.+)han$'),
+    r'\1',
+    [],
+    False,
+    'both'
+  ),
+
   # Plain Suffix Removal 1
   Rule(
     'Plain Suffix Removal 1',
@@ -57,6 +68,16 @@ rules = [
     'Aghi Suffix Removal',
     re.compile('^(.+)aghi$'),
     r'\1',
+    [],
+    False,
+    False
+  ),
+
+  # Gha Suffix Modification (tabhaligha, sabhaligha), morph gha to k
+  Rule(
+    'Gha Suffix Modification',
+    re.compile('^(.+)(gha)$'),
+    r'\1k',
     [],
     False,
     False
