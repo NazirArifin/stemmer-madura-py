@@ -1,5 +1,6 @@
 from typing import List
 from .lib.stemmer import Stemmer
+import os
 
 class _Files:
   """
@@ -61,8 +62,9 @@ def stemmer(word: str, verbose = False, withNgram: bool = False, ngGramThreshold
     stemmer.ngGramThreshold = ngGramThreshold
 
   file = _Files(stemmer)
-  stemmer.baseWords = file.readFile('basewords.txt')
-  stemmer.stopWords = file.readFile('stopwords.txt')
+  module_dir = os.path.dirname(__file__)
+  stemmer.baseWords = file.readFile(os.path.join(module_dir, 'data/basewords.txt'))
+  stemmer.stopWords = file.readFile(os.path.join(module_dir, 'data/stopwords.txt'))
   
   stemmed = stemmer.stemWords()
   if verbose:

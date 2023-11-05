@@ -2,11 +2,12 @@ from setuptools import setup
 
 setup(
   name='stemmer-madura',
-  version='0.1.2',
+  version='0.1.7',
   description='Stemmer untuk bahasa Madura menggunakan rule based',
   author='Mohammad Nazir Arifin',
   author_email='ceylon.rizan@gmail.com',
-  packages=['stemmer_madura'],
+  packages=['stemmer_madura', 'stemmer_madura.lib'],
+  package_data={'stemmer_madura': ['data/*.txt']},
   license='MIT',
   install_requires=[],
   keywords=['stemmer', 'madura', 'bahasa madura', 'nlp'],
