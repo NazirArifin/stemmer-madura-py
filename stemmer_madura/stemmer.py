@@ -1,3 +1,4 @@
+import re
 from typing import List
 from .lib.stemmer import Stemmer
 import os
@@ -26,7 +27,18 @@ class _Files:
 
   def _splitWordsFile(self, content: str) -> List[str]:
     lf = self._getLineBreakChar(content)
-    return list(filter(lambda e: len(e) > 0, map(lambda v: self._stemmer.normalizeString(v), content.split(lf))))
+    # return list(filter(lambda e: len(e) > 0, map(lambda v: self._stemmer.normalizeString(v), content.split(lf))))
+    result = []
+    for v in content.split(lf):
+      if len(v) > 0:
+        normalized = self._stemmer.normalizeString(v, True)
+        match = re.match(r'(.+)\(h\)$', normalized)
+        if match:
+          result.append(match.group(1))
+          result.append(match.group(1) + 'h')
+        else:
+          result.append(normalized)
+    return result
 
   def _getLineBreakChar(self, content: str) -> str:
     index_of_lf = content.find('\n', 1)  # No need to check first-character
@@ -63,7 +75,7 @@ def stemmer(word: str, verbose = False, withNgram: bool = False, ngGramThreshold
 
   file = _Files(stemmer)
   module_dir = os.path.dirname(__file__)
-  stemmer.baseWords = file.readFile(os.path.join(module_dir, 'data/basewords.txt'))
+  stemmer.baseWords = file.readFile(os.path.join(module_dir, 'data/lemmawords.txt'))
   stemmer.stopWords = file.readFile(os.path.join(module_dir, 'data/stopwords.txt'))
   
   stemmed = stemmer.stemWords()

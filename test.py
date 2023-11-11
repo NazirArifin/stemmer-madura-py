@@ -1,3 +1,6 @@
 from stemmer_madura import stemmer as stemmerMadura
+import re
 
-print(stemmerMadura('nak-kanak alerek'))
+text = 'abarna';
+print(stemmerMadura(text, True, withNgram=True, ngGramThreshold=0.60))
+

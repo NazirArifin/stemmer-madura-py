@@ -21,6 +21,9 @@ rules = [
     False
   ),
 
+
+
+
   # Nah Suffix Removal
   # Sepertinya tidak baku, mungkin bentuk dari akhiran "na" (romana, kalambina)
   Rule(
@@ -42,7 +45,7 @@ rules = [
     False,
     'both'
   ),
-
+  
   # Plain Suffix Removal 1
   Rule(
     'Plain Suffix Removal 1',
@@ -73,15 +76,7 @@ rules = [
     False
   ),
 
-  # Gha Suffix Modification (tabhaligha, sabhaligha), morph gha to k
-  Rule(
-    'Gha Suffix Modification',
-    re.compile('^(.+)(gha)$'),
-    r'\1k',
-    [],
-    False,
-    False
-  ),
+
 
   # Plain Prefix Removal 1
   Rule(
@@ -162,6 +157,28 @@ rules = [
     True,
     False
   ),
+
+
+  # Gha Suffix Modification (tabhaligha, sabhaligha), morph gha to k
+  Rule(
+    'Gha Suffix Modification',
+    re.compile('^(.+)(gha)$'),
+    r'\1k',
+    [],
+    False,
+    False
+  ),
+
+  # Dhan Suffix Removal (katorodhan)
+  Rule(
+    'Dhan Suffix Removal',
+    re.compile('^(.+)dhan$'),
+    r'\1t',
+    [],
+    False,
+    False
+  ),
+  
 
   # Plain Infix Removal
   Rule(

@@ -62,10 +62,6 @@ class Stemmer:
   def ngGramThreshold(self, threshold: float) -> None:
     self._ngGramThreshold = threshold
 
-  @property
-  def processingWords(self) -> List[str]:
-    return self.currentWords
-
   def addLog(self, log: str) -> None:
     if self._verbose:
       self._logs.append(log)
@@ -155,29 +151,34 @@ class Stemmer:
 
   def stemWords(self) -> str:
     self._fullLogs = []
-    splitChar = ' '
-
-    self._words = self._input.split(splitChar)
+    
+    self._words = re.findall(r'\b[\w-]+\b', self._input)
     self.addLog(f'✔ Tokenisasi input: "{self._input}" menjadi: [{", ".join(self._words)}]')
 
     self._results = [self.normalizeString(word) for word in self._words]
     self.addLog(f'✔ Proses casefolding menjadi: [{", ".join(self._results)}]')
 
-    self._results = [v for v in self._results if not self.inStopWords(v) and len(v) > 3]
+    self._results = [v for v in self._results if not self.inStopWords(v) and len(v) > 2]
     self.addLog(f'✔ Proses pembuangan stopwords menjadi: [{", ".join(self._results)}]')
     self.dumpLogs()
 
     if len(self._results) > 0:
       self._results = [self.stemWord(word) for word in self._results]
-      return splitChar.join(self._results)
+      return ' '.join(self._results)
     return ''
 
-  def normalizeString(self, text: str) -> str:
+  def normalizeString(self, text: str, fromDict: bool = False) -> str:
     # normalize the text to NFD form
     text = unicodedata.normalize('NFD', text)
 
     # remove diacritics
-    text = re.sub(r'[^a-zA-Z\-\' ]', '', text)
+    text = re.sub(r'[\u0300-\u036f]', '', text)
+
+    # remove non-alphabet characters, hypens, single quotes, and spaces
+    if not fromDict:
+      text = re.sub(r'[^a-zA-Z\-\' ]', '', text)
+    else:
+      text = re.sub(r'[^a-zA-Z\-\'\(\) ]', '', text)
 
     # convert to lowercase and strip leading and trailing spaces
     text = text.strip().lower()
@@ -196,6 +197,8 @@ class Stemmer:
     self._baseWords = words
 
   def inBaseWords(self, word: str) -> bool:
+    if (self._verbose):
+      self.addLog(f'⇨ Mencari kata "{word}" di kata dasar')
     return word in self._baseWords
 
   @property
