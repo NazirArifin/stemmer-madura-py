@@ -27,12 +27,13 @@ class _Files:
 
   def _splitWordsFile(self, content: str) -> List[str]:
     lf = self._getLineBreakChar(content)
-    # return list(filter(lambda e: len(e) > 0, map(lambda v: self._stemmer.normalizeString(v), content.split(lf))))
     result = []
     for v in content.split(lf):
       if len(v) > 0:
         normalized = self._stemmer.normalizeString(v, True)
+        # Check if the word has a variant (h)
         match = re.match(r'(.+)\(h\)$', normalized)
+        # If it has a variant, add both the word and its variant
         if match:
           result.append(match.group(1))
           result.append(match.group(1) + 'h')

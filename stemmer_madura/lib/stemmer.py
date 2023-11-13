@@ -71,6 +71,7 @@ class Stemmer:
       if len(self._logs) > 0:
         self._fullLogs.append(self._logs)
         self._logs = []
+  
 
   def stemWord(self, word: str) -> str:
     self.originalWord = word

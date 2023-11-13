@@ -1,6 +1,11 @@
 from stemmer_madura import stemmer as stemmerMadura
-import re
+import csv
 
-text = 'abarna';
-print(stemmerMadura(text, True, withNgram=True, ngGramThreshold=0.60))
+with open('tests/test__prefix.csv', 'r') as f:
+  csv_reader = csv.reader(f, delimiter=';')
+  for row in csv_reader:
+    print(row[0] + ' -> ' + stemmerMadura(row[0]))
+
+
+
 
