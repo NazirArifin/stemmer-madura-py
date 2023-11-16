@@ -15,9 +15,10 @@ class Stemmer:
     self._ngGramThreshold: float = 0.66
     self._words: List[str] = []
     self._results: List[str] = []
-    self.originalWord: str = ''
-    self.ruleIndex: int = -1
-    self.currentWords: List[str] = []
+    self._originalWord: str = ''
+    self._ruleIndex: int = -1
+    self._currentWords: List[str] = []
+    self._bagOfResults: List[str] = []
 
   @property
   def verbose(self) -> bool:
@@ -74,9 +75,10 @@ class Stemmer:
   
 
   def stemWord(self, word: str) -> str:
-    self.originalWord = word
-    self.currentWords = [word]
-    self.ruleIndex = 0
+    self._originalWord = word
+    self._currentWords = [word]
+    self._ruleIndex = 0
+    self._bagOfResults = []
 
     self.addLog(f'⚡ Memproses kata "{word}"')
 
@@ -84,19 +86,20 @@ class Stemmer:
       self._success = True
       self.addLog(f'⭐ Menemukan kata "{word}" untuk kata "{word}" di kata dasar')
       self.dumpLogs()
-      return word
+      self._bagOfResults.append(word)
 
     while True:
-      rule = rules[self.ruleIndex]
+      rule = rules[self._ruleIndex]
 
       recheckCurrentWords = False
-      for k in range(len(self.currentWords)):
-        w = self.currentWords[k]
+      for k in range(len(self._currentWords)):
+        w = self._currentWords[k]
 
         if rule.pattern.search(w):
           self.addLog(f'⇨ Menjalankan rule "{rule.name}" pada kata "{w}"')
 
-          if not rule.hasVariance:
+          # If the rule replacements length == 0), just replace the word
+          if len(rule.replacements) == 0:
             morph = rule.pattern.sub(rule.replacement, w)
             self.addLog(f'⇨ Mengubah kata "{w}" menjadi: "{morph}"')
 
@@ -104,15 +107,15 @@ class Stemmer:
               self._success = True
               self.addLog(f'⭐ Menemukan kata "{morph}" untuk kata "{word}" di kata dasar')
               self.dumpLogs()
-              return morph
+              self._bagOfResults.append(morph)
             else:
               if rule.recover:
                 self.addLog(f'⇨ Mengembalikan kata "{morph}" ke "{w}"')
-                self.currentWords[k] = w
+                self._currentWords[k] = w
                 if rule.recover == 'both':
-                  self.currentWords.append(morph)
+                  self._currentWords.append(morph)
               else:
-                self.currentWords[k] = morph
+                self._currentWords[k] = morph
           else:
             morphs = []
             for r in rule.replacements:
@@ -122,17 +125,18 @@ class Stemmer:
                 self._success = True
                 self.addLog(f'⭐ Menemukan kata "{morph}" untuk kata "{word}" di kata dasar')
                 self.dumpLogs()
-                return morph
+                self._bagOfResults.append(morph)
+                
               morphs.append(morph)
-            self.currentWords.pop(k)
-            self.currentWords += morphs
+            self._currentWords.pop(k)
+            self._currentWords += morphs
             recheckCurrentWords = True
             break
 
       if not recheckCurrentWords:
-        self.ruleIndex += 1
+        self._ruleIndex += 1
 
-      if self.ruleIndex == len(rules):
+      if self._ruleIndex == len(rules):
         break
 
     if self._withNgram:
@@ -144,11 +148,14 @@ class Stemmer:
           self._success = True
           self.addLog(f'⭐ Menemukan kata "{baseWord}" untuk kata "{word}" di kata dasar menggunakan N-Gram')
           self.dumpLogs()
-          return baseWord
+          self._bagOfResults.append(baseWord)
 
     self.addLog(f'⚠ Tidak dapat menemukan kata "{word}" di kata dasar')
     self.dumpLogs()
-    return self.originalWord
+    # if len of bagOfResults > 0, return all the results joined by /
+    if len(self._bagOfResults) > 0:
+      return '/'.join(self._bagOfResults)
+    return self._originalWord
 
   def stemWords(self) -> str:
     self._fullLogs = []
