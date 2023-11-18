@@ -21,7 +21,7 @@ class _Files:
     return self._stemmer
   
   def readFile(self, filename: str) -> List[str]:
-    with open(filename, 'r') as file:
+    with open(filename, 'r', encoding="utf-8") as file:
       return self._splitWordsFile(file.read())
     
 
